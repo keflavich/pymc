@@ -502,11 +502,25 @@ class Metropolis(StepMethod):
         else:
             logp = self.logp_plus_loglike
 
+        if self.verbose > 3:
+            print_(self._id + " value before proposing: ",self.stochastic.value)
+            print_(self._id + " logp before proposing: ",self.stochastic.logp)
+            print_("Total loglike before proposing: ",self.loglike)
         if self.verbose > 2:
             print_(self._id + ' proposing.')
 
         # Sample a candidate value
         self.propose()
+
+        if self.verbose > 3:
+            print_(self._id + " value after proposing: ",self.stochastic.value)
+            try:
+                print_(self._id + " logp after proposing: ",self.stochastic.logp)
+                print_("Total loglike after proposing: ",self.loglike)
+                print_("Total loglike after-before: ",self.loglike-logp)
+            except ZeroProbability:
+                print_("Zero probability of this value.  Proposal rejected.")
+                pass
 
         # Probability and likelihood for s's proposed value:
         try:
